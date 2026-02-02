@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeTip | The Aesthetic Tip Splitter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #38bdf8;
+            --text: #f8fafc;
+            --gold: #ffdd00;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: var(--card);
+            padding: 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            margin-top: 30px;
+        }
+
+        h1 { font-weight: 800; font-size: 1.5rem; margin-bottom: 25px; text-align: center; color: var(--accent); }
+
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-size: 0.8rem; margin-bottom: 8px; opacity: 0.7; }
+        
+        input {
+            width: 100%;
+            background: #334155;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            font-size: 1.2rem;
+            outline: none;
+            border: 2px solid transparent;
+            transition: 0.3s;
+        }
+
+        input:focus { border-color: var(--accent); }
+
+        .vibe-selector {
+            margin: 25px 0;
+            text-align: center;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--accent);
+            cursor: pointer;
+        }
+
+        .emoji-display { font-size: 3rem; margin: 10px 0; display: block; }
+
+        .result-card {
+            background: #334155;
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 25px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+
+        .divider { height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0; }
+
+        .total-per-person {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .support-box {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 1px solid #334155;
+            background: rgba(56, 189, 248, 0.05);
+            border-radius: 0 0 24px 24px;
+        }
+
+        .support-btn {
+            display: inline-block;
+            background: var(--gold);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 800;
+            margin-top: 15px;
+            transition: 0.2s;
+        }
+
+        .footer-text {
+            margin-top: 30px;
+            font-size: 0.7rem;
+            opacity: 0.5;
+            text-align: center;
+            padding-bottom: 20px;
+        }
+
+        @media (max-width: 480px) { .container { padding: 20px; } }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>VibeTip USA 🇺🇸</h1>
+        
+        <div class="input-group">
+            <label>TOTAL BILL ($)</label>
+            <input type="number" id="bill" placeholder="0.00" step="0.01">
+        </div>
+
+        <div class="input-group">
+            <label>SPLIT BETWEEN (PEOPLE)</label>
+            <input type="number" id="people" value="1" min="1">
+        </div>
+
+        <div class="vibe-selector">
+            <label>SERVICE VIBE</label>
+            <span class="emoji-display" id="emoji">🙂</span>
+            <input type="range" id="vibe" min="10" max="30" value="18">
+            <p><span id="tipPercent">18</span>% Tip</p>
+        </div>
+
+        <div class="result-card">
+            <div class="result-row">
+                <span>Tip Amount:</span>
+                <span id="totalTip">$0.00</span>
+            </div>
+            <div class="result-row" style="font-weight: 600;">
+                <span>Total with Tip:</span>
+                <span id="fullTotal">$0.00</span>
+            </div>
+            <div class="divider"></div>
+            <div class="result-row">
+                <span>Each Person Pays:</span>
+            </div>
+            <div class="total-per-person" id="perPerson">$0.00</div>
+        </div>
+
+        <div class="support-box">
+            <p style="font-size: 0.9rem; color: var(--accent); font-weight: 600;">Saved you from a math headache? ✨</p>
+            <p style="font-size: 0.75rem; margin-top: 8px; opacity: 0.8;">I'm a solo developer building tools to help you. If this helped, consider supporting my craft!</p>
+            <a href="TERA_PAYMENT_LINK" target="_blank" class="support-btn">☕ Tip $1 to Dev</a>
+        </div>
+    </div>
+
+    <p class="footer-text">© 2026 VibeTip Utility. Privacy Policy | Terms</p>
+
+    <script>
+        const billInput = document.getElementById('bill');
+        const peopleInput = document.getElementById('people');
+        const vibeInput = document.getElementById('vibe');
+        const emojiDisplay = document.getElementById('emoji');
+        const tipPercentText = document.getElementById('tipPercent');
+        
+        const emojis = { 10: '😠', 15: '😐', 18: '🙂', 20: '😊', 25: '🤩', 30: '👑' };
+
+        function calculate() {
+            const bill = parseFloat(billInput.value) || 0;
+            const people = parseInt(peopleInput.value) || 1;
+            const tipPercent = parseInt(vibeInput.value);
+
+            const tipAmount = bill * (tipPercent / 100);
+            const totalBill = bill + tipAmount;
+            const perPerson = totalBill / people;
+
+            document.getElementById('totalTip').innerText = `$${tipAmount.toFixed(2)}`;
+            document.getElementById('fullTotal').innerText = `$${totalBill.toFixed(2)}`;
+            document.getElementById('perPerson').innerText = `$${perPerson.toFixed(2)}`;
+            tipPercentText.innerText = tipPercent;
+
+            if(tipPercent <= 12) emojiDisplay.innerText = emojis[10];
+            else if(tipPercent <= 16) emojiDisplay.innerText = emojis[15];
+            else if(tipPercent <= 19) emojiDisplay.innerText = emojis[18];
+            else if(tipPercent <= 22) emojiDisplay.innerText = emojis[20];
+            else if(tipPercent <= 27) emojiDisplay.innerText = emojis[25];
+            else emojiDisplay.innerText = emojis[30];
+        }
+
+        // Sabhi inputs par multiple events add kar diye hain
+        const inputs = [billInput, peopleInput, vibeInput];
+        inputs.forEach(el => {
+            el.addEventListener('input', calculate);
+            el.addEventListener('keyup', calculate);
+            el.addEventListener('change', calculate);
+        });
+
+        // Initialize display
+        calculate();
+    </script>
+</body>
+</html>
